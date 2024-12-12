@@ -6,8 +6,8 @@
 
 ### Архитектура проекта:
 
-> [link](#)
+> [Miro](https://miro.com/app/board/uXjVL3nBOTY=/)
 
 ### Цели и задачи:
 
-> [link](#)
+> [Kaiten](https://crazycat.kaiten.ru/space/504576)
