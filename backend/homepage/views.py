@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 # Create your views here.
 
-def index(request): 
-    return HttpResponse("<h1>Homepage</h1>")
+def index(request):
+    template_name = 'homepage/index.html'
+    return render(request, template_name)
