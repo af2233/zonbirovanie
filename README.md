@@ -11,3 +11,7 @@
 ### Цели и задачи:
 
 > [Kaiten](https://crazycat.kaiten.ru/space/504576)
+
+### Исследовательский документ:
+
+> [Google Docs](https://docs.google.com/document/d/15Ir2Jy6CUUlSSOhgtOxafPfndpLTomrx/edit?usp=sharing&ouid=105804023758653627289&rtpof=true&sd=true)
