@@ -1,46 +1,74 @@
 from django.contrib import admin
-from .models import Image, OilSpill, AnalysisRequest, Report
+from .models import User, UploadedImage, ProcessedImage, AnalysisRequest, Report
 
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    list_display = ("title", "source", "capture_date", "sea_type", "processed")
-    list_filter = ("sea_type", "processed", "source")
-    search_fields = ("title", "location")
-    date_hierarchy = "capture_date"
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ("id", "username", "email")
+    search_fields = ("username", "email")
 
 
-@admin.register(OilSpill)
-class OilSpillAdmin(admin.ModelAdmin):
-    list_display = ("get_image_title", "area", "confidence", "detection_date")
-    list_filter = ("detection_date", "spill_type")
-    search_fields = ("image__title", "notes")
-    date_hierarchy = "detection_date"
+@admin.register(UploadedImage)
+class UploadedImageAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "upload_date", "sea_type")
+    list_filter = ("sea_type", "upload_date")
+    search_fields = ("user__username",)
+    date_hierarchy = "upload_date"
 
-    def get_image_title(self, obj):
-        return obj.image.title
 
-    get_image_title.short_description = "Image"
-    get_image_title.admin_order_field = "image__title"
+@admin.register(ProcessedImage)
+class ProcessedImageAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "get_original_image",
+        "user",
+        "area_of_pollution",
+        "degree_of_pollution",
+        "processing_date",
+    )
+    list_filter = ("processing_date",)
+    search_fields = ("user__username",)
+    date_hierarchy = "processing_date"
+
+    def get_original_image(self, obj):
+        return f"Original Image #{obj.uploaded_image.id}"
+
+    get_original_image.short_description = "Original Image"
+    get_original_image.admin_order_field = "uploaded_image__id"
 
 
 @admin.register(AnalysisRequest)
 class AnalysisRequestAdmin(admin.ModelAdmin):
-    list_display = ("user", "get_image_title", "status", "created_at", "completed_at")
+    list_display = (
+        "id",
+        "user",
+        "get_image_id",
+        "status",
+        "created_at",
+        "completed_at",
+    )
     list_filter = ("status", "created_at")
-    search_fields = ("user__username", "image__title")
+    search_fields = ("user__username",)
     date_hierarchy = "created_at"
 
-    def get_image_title(self, obj):
-        return obj.image.title if obj.image else "No image"
+    def get_image_id(self, obj):
+        return f"Image #{obj.uploaded_image.id}"
 
-    get_image_title.short_description = "Image"
+    get_image_id.short_description = "Image"
 
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ("title", "user", "sea_type", "created_at", "updated_at")
+    list_display = (
+        "id",
+        "title",
+        "user",
+        "sea_type",
+        "created_at",
+        "start_date",
+        "end_date",
+    )
     list_filter = ("sea_type", "created_at")
-    search_fields = ("title", "user__username", "summary")
+    search_fields = ("title", "user__username")
     date_hierarchy = "created_at"
-    filter_horizontal = ("images", "oil_spills")
+    filter_horizontal = ("processed_images",)
