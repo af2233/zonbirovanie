@@ -7,22 +7,23 @@ WORKDIR /usr/src/app
 # Переменные окружения
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+ENV PYTHONOPTIMIZE=2
 
 # Обновление pip
-RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
-# Скопируем и установим зависимости
-COPY ./requirements.txt .
+# Копирование и установка зависимостей
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем всё, что осталось
+# Копирование исходного кода
 COPY . .
 
-EXPOSE 8000
-
+# Рабочая директория проекта
 WORKDIR /usr/src/app/django_app
 
-# Применяем миграции и запускаем сервер
+# Открытие порта
+EXPOSE 8000
+
+# Запуск миграций и сервера
 CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
