@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'debug_toolbar',
-    'images'
+    'images',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +166,6 @@ INTERNAL_IPS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+AUTH_USER_MODEL = 'users.MyUser'
