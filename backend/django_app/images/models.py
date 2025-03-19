@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.gis.db import models as gis_models
 from django.contrib.auth.models import User
 
 
@@ -40,10 +39,6 @@ class ProcessedImage(models.Model):
     )
     processing_date = models.DateTimeField(auto_now_add=True)
 
-    # Форма загрязнения (реализация на GeoDjango)
-    geometry = gis_models.PolygonField(
-        srid=4326, null=True, blank=True, help_text="Полигональная форма загрязнения"
-    )
 
     def __str__(self):
         return f"Обработанное изображение {self.id} с площадью загрязнения {self.area_of_pollution} км²"
