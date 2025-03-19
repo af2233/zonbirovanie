@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+from django.contrib.auth.models import User
 
 
 class UploadedImage(models.Model):
@@ -9,7 +10,7 @@ class UploadedImage(models.Model):
 
     id = models.AutoField(primary_key=True)
     binary_image = models.FileField(upload_to="satellite_images/")
-    user_id = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="uploaded_images")
     upload_date = models.DateTimeField(auto_now_add=True)
     sea_type = models.CharField(
         max_length=50,
@@ -17,7 +18,7 @@ class UploadedImage(models.Model):
     )
 
     def __str__(self):
-        return f"Изображение {self.id} загружено пользователем {self.user_id}"
+        return f"Изображение {self.id} загружено {self.user.username}"
 
 
 class ProcessedImage(models.Model):
@@ -27,7 +28,7 @@ class ProcessedImage(models.Model):
 
     id = models.AutoField(primary_key=True)
     binary_image = models.FileField(upload_to="processed_images/")
-    user_id = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="processed_images")
     uploaded_image = models.ForeignKey(
         UploadedImage, on_delete=models.CASCADE, related_name="processed_versions"
     )
