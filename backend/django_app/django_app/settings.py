@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'debug_toolbar',
+    'images'
 ]
 
 MIDDLEWARE = [
