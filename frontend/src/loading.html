@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zonbirovanie</title>
+    <link rel="stylesheet" href="css/styleloading.css">
+</head>
+<body>
+    <div class="wrapper">
+        <!--HEADER-LOADING-->
+        <header class="header">
+            <img src="./images/rectangle.png" alt="" class="head-rectangle">
+            <img src="./images/logo.svg" alt="" class="logo">
+            <div class="user-info">
+                <div class="user-name">
+                    <span class="white">Олег</span>
+                </div>
+
+                <div class="user-logo">
+                    <img src="images/user-icon.svg" alt="">
+                </div>
+            </div>
+        </header>
+
+        <!--MAIN-LOADING-->
+        <main>
+            <div class="main-loading-container">
+                <div class="wave">
+                    <img src="images/wave-loading.svg" alt="">
+                </div>
+                <div class="main-caption">
+                    <h1><span class="white">Загрузите снимок для анализа нефтяных<br>загрязнений</span></h1>
+                    <p>Наша система обработает изображение и выявит возможные нефтяные разливы</p>
+                </div>
+
+                <div class="select-image">
+                    <div class="select-icon">
+                        <img src="images/loading-cloud.svg" alt="">
+                    </div>
+                    <label for="upload" class="select">Выберите изображение</label>
+                    <input type="file" id="upload" class="hidden-input" accept="image/*">
+
+                </div>
+                <div class="start-button">
+                    <span class="white"><a href="!#" class="start">Начать анализ</a></span> 
+                </div>
+            </div>
+
+            <div class="processing-completed">
+                <div class="text-completed">
+                    <p><span class="white">Обработка завершена. Ваше <br>изображение готово к скачиванию!</span></p>
+                    <img src="images/ellipse.png" alt="" class="circle">
+                </div>
+                <div class="download-button">
+                    <span class="white"><a href="!#" class="download">Скачать</a></span> 
+                </div>
+                
+            </div>
+
+        <!--FOOTER-LOADING-->
+        <footer>
+            <div class="copyright">
+                <span class="white">@ 2025 zonbirovanie</span>
+            </div>
+        
+        </footer>
+        </main>
+    </div>
+</body>
+</html>
