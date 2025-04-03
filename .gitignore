@@ -1,10 +1,11 @@
 # .gitignore
-__pycache__/
-db.sqlite3
-.env
 .venv/
-env/
 venv/
+env/
+__pycache__/
+.pytest_cache/
+node_modules/
 .idea/
 .vscode/
-node_modules/
+db.sqlite3
+.env
