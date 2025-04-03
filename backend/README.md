@@ -25,7 +25,7 @@ python manage.py migrate
 ```
 Запустите сервер:
 ```
-python manage.py runserver
+python manage.py runserver ИЛИ gunicorn --bind 0.0.0.0:8000 django_app.wsgi
 ```
 ### Запуск с помощью Docker
 Из корня проекта перейдите в папку backend:
