@@ -15,7 +15,7 @@ source .venv/Scripts/activate
 ```
 pip install -r requirements.txt
 ```
-Перейдите в папку проекта:
+Перейдите в папку приложения:
 ```
 cd django_app
 ```
