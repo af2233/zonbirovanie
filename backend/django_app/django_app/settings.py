@@ -97,11 +97,11 @@ WSGI_APPLICATION = 'django_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'postgres': {
+    'default': {
         'ENGINE': os.getenv('POSTGRES_ENGINE'),
         'NAME': os.getenv('POSTGRES_NAME'),
         'USER': os.getenv('POSTGRES_USER'),
@@ -160,8 +160,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 
 # CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",  # Frontend
-#     "http://localhost:4000",  # ML
+#     "http://localhost:3000",   # React
+#     "http://127.0.0.1:3000",   # React через IP
+#     "http://0.0.0.0:3000",     # фронт в контейнере
+#     "http://web:8000",
 # ]
 
 
