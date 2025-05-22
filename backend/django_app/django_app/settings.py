@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 import socket
 from pathlib import Path
+from datetime import timedelta
+
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -44,10 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'debug_toolbar',
-    'images',
-    'users',
+    'users.apps.UsersConfig',
+    'images.apps.ImagesConfig',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +100,7 @@ DATABASES = {
     },
     'postgres': {
         'ENGINE': os.getenv('POSTGRES_ENGINE'),
-        'NAME': os.getenv('POSTGRES_DB'),
+        'NAME': os.getenv('POSTGRES_NAME'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
@@ -143,18 +149,57 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# CORS settings
+
 CORS_ORIGIN_ALLOW_ALL = True
 
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # приложение React
+# ]
+
+
+# DRF settings
+
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
+
+# JWt settings
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+
+# Swagger settings
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'zonbirovanie',
     'DESCRIPTION': 'IT project',
-    'VERSION': '0.4.2',
+    'VERSION': '0.5.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,
+    },
 }
+
+
+# Media file paths
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# AUTH_USER_MODEL = 'users.MyUser'
 
 
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -162,10 +207,3 @@ hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = [
     '127.0.0.1',
 ] + [ip[:-1] + "1" for ip in ips]  # Преобразование IP Docker-сети
-
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
-AUTH_USER_MODEL = 'users.MyUser'

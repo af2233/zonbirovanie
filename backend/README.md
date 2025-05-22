@@ -3,6 +3,19 @@
 ```
 cd backend
 ```
+Создайте файл переменных окружения .env:
+| Переменная | Пример значения |
+| ------------- | ------------- |
+| SECRET_KEY | secret |
+| DEBUG | 1 |
+| ALLOWED_HOSTS | * |
+| POSTGRES_ENGINE | django.db.backends.postgresql |
+| POSTGRES_NAME | untitled |
+| POSTGRES_USER | postgres |
+| POSTGRES_PASSWORD | 1234 |
+| POSTGRES_HOST | localhost |
+| POSTGRES_PORT | 5432 |
+
 Установите виртуальную среду python - venv:
 ```
 python -m venv .venv
