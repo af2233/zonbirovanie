@@ -1,8 +1,15 @@
 # Стартовый образ
-FROM python:3.11-alpine
+FROM python:3.11-slim
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
 
 # Рабочая директория
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Переменные окружения
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -20,12 +27,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Рабочая директория проекта
-WORKDIR /usr/src/app/django_app
+WORKDIR /app/django_app
+
+RUN chmod +x ./script.sh
 
 # Открытие порта
 EXPOSE 8000
 
 # Запуск миграций и сервера
-RUN python manage.py migrate
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "django_app.wsgi:application"]
+CMD ["./script.sh"]
