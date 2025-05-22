@@ -45,15 +45,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
-    'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'djoser',
+    'corsheaders',
     'drf_spectacular',
     'debug_toolbar',
+    'django_cleanup.apps.CleanupConfig',
+
     'users.apps.UsersConfig',
     'images.apps.ImagesConfig',
-    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +145,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT= os.path.join(BASE_DIR,'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -155,17 +160,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 
 # CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",  # приложение React
+#     "http://localhost:3000",  # Frontend
+#     "http://localhost:4000",  # ML
 # ]
 
 
 # DRF settings
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly', 
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '10000/day',
+        'anon': '1000/day',
+    }
 }
 
 
@@ -180,12 +197,28 @@ SIMPLE_JWT = {
 }
 
 
+# Djoser settings
+
+DJOSER = {
+    'LOGIN_FIELD': 'username',
+    'USER_CREATE_PASSWORD_RETYPE': False,
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.CustomUserCreateSerializer',
+    },
+    'TOKEN_MODEL': None,
+    'PASSWORD_RESET_CONFIRM_URL': 'reset_password_confirm/{uid}/{token}',
+    'SEND_CONFIRMATION_EMAIL': False,
+    'SEND_ACTIVATION_EMAIL': False,
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+}
+
+
 # Swagger settings
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'zonbirovanie',
     'DESCRIPTION': 'IT project',
-    'VERSION': '0.5.0',
+    'VERSION': '0.5.1',
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_SETTINGS': {
         'persistAuthorization': True,
@@ -195,8 +228,14 @@ SPECTACULAR_SETTINGS = {
 
 # Media file paths
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@example.com'
 
 
 # AUTH_USER_MODEL = 'users.MyUser'
