@@ -22,6 +22,10 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 import debug_toolbar
 
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
+
+from django.urls import include, path, reverse_lazy
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +33,16 @@ urlpatterns = [
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/v1/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/v1/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('auth/', include('django.contrib.auth.urls')),
+    path(
+        'auth/registration/', 
+        CreateView.as_view(
+            template_name='registration/registration_form.html',
+            form_class=UserCreationForm,
+            success_url=reverse_lazy('login'),
+        ),
+        name='registration',
+    ),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
