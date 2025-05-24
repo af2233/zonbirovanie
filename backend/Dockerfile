@@ -1,28 +1,38 @@
 # Стартовый образ
-FROM python:3.11-alpine
+FROM python:3.11-slim
+
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
 
 # Рабочая директория
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Переменные окружения
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+ENV PYTHONOPTIMIZE=2
 
 # Обновление pip
-RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
-# Скопируем и установим зависимости
-COPY ./requirements.txt .
+# Копирование и установка зависимостей
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем всё, что осталось
+# Копирование исходного кода
 COPY . .
 
+# Рабочая директория проекта
+WORKDIR /app/django_app
+
+RUN chmod +x ./script.sh
+
+# Открытие порта
 EXPOSE 8000
 
-WORKDIR /usr/src/app/django_app
-
-# Применяем миграции и запускаем сервер
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+# Запуск миграций и сервера
+CMD ["./script.sh"]
