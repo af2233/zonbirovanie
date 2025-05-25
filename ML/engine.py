@@ -7,8 +7,10 @@ import zipfile
 from PIL import Image
 from tqdm import tqdm
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-from .models import UNet, get_transforms
+from ML.models import UNet, get_transforms
+# from ML.oil_spills_segmantation import unet_model         What's that?
 
 # гиперпараметры 
 SEED = 666
@@ -16,7 +18,7 @@ SEED = 666
 DATA_PATH = Path('photos')
 MODELS_PATH = Path('models')
 ACHIEVE_PATH = Path('input.zip')
-INPUT_PATH = DATA_PATH
+INPUT_PATH = DATA_PATH / 'input'
 RESULT_PATH = DATA_PATH / 'result'
 CHECKOPOINT = MODELS_PATH / 'models/model_7.pth'
 
@@ -99,15 +101,32 @@ def predict(model: torch.nn.Module,
             save_image(pred_tensor, save_path)
 
 
-def main():
-    set_seed()
-    # создаем модель и загружаем веса
-    unet_model = UNet(dropout=DROPOUT).to(DEVICE)
-    unet_model.load_state_dict(torch.load(f=CHECKOPOINT, map_location=DEVICE, weights_only=True))
-    # распаковываем и делаем маски
-    safe_extract(zip_path=ACHIEVE_PATH, extract_to=INPUT_PATH)
-    predict(model=unet_model, input_path="photos/input")
+def run_engine(zip_bytes: bytes) -> dict[str, bytes]:
+    with TemporaryDirectory() as tmpdir:
+        input_dir = Path(tmpdir) / "photos/input"
+        result_dir = Path(tmpdir) / "photos/result"
+        input_dir.mkdir()
+        result_dir.mkdir()
 
+        zip_path = Path(tmpdir) / "input.zip"
+        with open(zip_path, "wb") as f:
+            f.write(zip_bytes)
 
-if __name__ == '__main__':
-    main()
+        global INPUT_PATH, RESULT_PATH
+        INPUT_PATH = input_dir
+        RESULT_PATH = result_dir
+
+        # Запуск
+        set_seed()
+        unet_model = UNet(dropout=DROPOUT).to(DEVICE)
+        unet_model.load_state_dict(torch.load(f=CHECKOPOINT, map_location=DEVICE, weights_only=True))
+        safe_extract(zip_path=zip_path, extract_to=INPUT_PATH)
+        predict(model=unet_model, input_path=str(INPUT_PATH), result_path=str(RESULT_PATH))
+
+        # Считываем все предсказанные изображения в словарь
+        result = {}
+        for fname in os.listdir(result_dir):
+            with open(result_dir / fname, 'rb') as f:
+                result[fname] = f.read()
+
+        return result
