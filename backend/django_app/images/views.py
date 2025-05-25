@@ -1,5 +1,6 @@
 import uuid
 import requests
+import os
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -45,8 +46,9 @@ def process_images(request, archive_id):
     if not archive.uploaded_file:
         return Response({'error': 'В архив не загружен ни один файл.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Создаем полный URL для ML сервиса
-    ml_service_url = "http://ml-service/process/"
+    ml_service_url = os.getenv('ML_URL', 'http://ml-service/process/')
+    
+
     try:
         with open(archive.uploaded_file.path, 'rb') as f:
             files = {'file': (archive.uploaded_file.name, f)}
