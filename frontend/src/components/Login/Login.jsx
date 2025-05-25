@@ -1,21 +1,47 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 import './Login.css';
-import waveImage from '../../images/wave-log-in.svg';
-import logoImage from '../../images/logo-log-in.svg';
+import waveImage from '../../assets/wave-log-in.svg';
+import logoImage from '../../assets/logo-log-in.svg';
+import { fetchWithRefresh } from '../Utils.jsx';
+
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
+    setError(false);
+
+    if (!username || !password) {
       setError(true);
       return;
     }
-    console.log('Вход:', { email, password });
+
+    try {
+      const res = await fetchWithRefresh('http://localhost:8000/api/v1/auth/jwt/create/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('access', data.access);
+        localStorage.setItem('refresh', data.refresh);
+        navigate('/loading');
+      } else {
+        setError(true);
+      }
+    } catch (err) {
+      setError(true);
+    }
   };
 
   return (
@@ -34,12 +60,12 @@ const Login = () => {
           <div className="divider"></div>
 
           <div className="input-box">
-            <label htmlFor="email">Почта</label>
+            <label htmlFor="username">Имя</label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -55,12 +81,12 @@ const Login = () => {
             />
             {error && (
               <span className="error-message">
-                Неверно введена почта или пароль
+                Неверно введены имя пользователя или пароль
               </span>
             )}
           </div>
 
-          <button type="submit" className="btn" onClick={() => window.location.href='/loading'}>
+          <button type="submit" className="btn">
             Продолжить
           </button>
         </form>
