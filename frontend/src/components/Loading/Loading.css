@@ -102,7 +102,6 @@ h1 {
   color: #9D95AA;
   opacity: 0.6;
   margin-bottom: 50px;
-  font-family: 'Alike Angular', serif;
 }
 
 .upload-area {
@@ -146,6 +145,8 @@ h1 {
   display: none;
 }
 
+/* BUTTONS */
+
 .action-button {
   background-color: #283BA5;
   color: white;
@@ -165,8 +166,34 @@ h1 {
   background-color: #1d2a7a;
 }
 
+.btn {
+    padding: 13px 18px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+    font-family: "Montserrat", sans-serif;
+    font-size: 17px;
+    font-style: normal;
+    margin-right: 8px;
+    border: none;
+    z-index: 10;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn span {
+    opacity: 0.9;
+}
+
+.btn-blue {
+    background-color: #21284E;
+}
+
+.btn-purple {
+    background-color: #283BA5;
+}
+
 /* Footer Styles */
-.loading-footer {
+.copyright {
   background-color: #283BA5;
   padding: 34px 0;
   text-align: center;

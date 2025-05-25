@@ -36,8 +36,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: right center / 55% no-repeat url('../../images/asia.svg'),
-                center / cover no-repeat url('../../images/circle.svg'), #040625;
+    background: right center / 55% no-repeat url('../../assets/asia.svg'),
+                center / cover no-repeat url('../../assets/circle.svg'), #040625;
 }
 
 * {
@@ -80,7 +80,8 @@ a {
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1;
+    z-index: 0;
+    opacity: 0.5;
 }
 
 .btn {
@@ -109,6 +110,14 @@ a {
     background-color: #283BA5;
 }
 
+.subtitle {
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: 0.09em;
+  color: #9D95AA;
+  margin-bottom: 50px;
+}
+
 .logo {
     z-index: 10;
 }
@@ -128,11 +137,13 @@ a {
 .white {
     color: #FFFFFF;
     opacity: 0.9;
+    font-weight: 700;
 }
 
 .blue {
     color: #283BA5;
     opacity: 0.9;
+    font-weight: 700;
 }
 
 .main-content p {
@@ -165,6 +176,21 @@ a {
     z-index: -1;
 }
 
+/* USER */
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 0.04em;
+  color: white;
+}
+
 /* FOOTER */
 footer {
     margin-top: 210px;
@@ -173,6 +199,7 @@ footer {
 
 .copyright {
     text-align: center;
+    color: white;
     padding: 34.2px;
     font-size: 20px;
     letter-spacing: 0.04em;
