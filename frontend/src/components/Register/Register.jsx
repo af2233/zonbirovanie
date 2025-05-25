@@ -20,14 +20,21 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
-      setError(true);
-      return;
+    setError('');
+    const res = await fetch('${process.env.REGISTER_URL}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, username, password }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+        navigate('/login');
+    } else {
+        setError('Ошибка регистрации');
     }
-    console.log('Регистрация:', formData);
-  };
+};
 
   return (
     <div className="register-container">
