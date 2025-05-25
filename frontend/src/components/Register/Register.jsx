@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 import './Register.css';
-import waveImage from '../../images/wave-log-in.svg';
-import logoImage from '../../images/logo-log-in.svg';
+import waveImage from '../../assets/wave-log-in.svg';
+import logoImage from '../../assets/logo-log-in.svg';
+import { fetchWithRefresh } from '../Utils.jsx';
+
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: ''
   });
+
   const [error, setError] = useState(false);
 
   const handleChange = (e) => {
@@ -20,13 +28,38 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
+    setError(false);
+    setErrorMessage('');
+
+    const { username, email, password } = formData;
+
+    if (!username || !email || !password) {
       setError(true);
       return;
     }
-    console.log('Регистрация:', formData);
+
+    try {
+      const res = await fetchWithRefresh('http://localhost:8000/api/v1/auth/users/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      if (res.ok) {
+        navigate('/login');
+        return;
+      }
+
+      const data = await res.json();
+      const messages = Object.values(data).flat().join(' ');
+      setError(true);
+      setErrorMessage(messages || 'Ошибка регистрации');
+    } catch (err) {
+      setError(true);
+      setErrorMessage('Ошибка подключения к серверу'); 
+    }
   };
 
   return (
@@ -45,12 +78,12 @@ const Register = () => {
           <div className="divider"></div>
 
           <div className="input-box">
-            <label htmlFor="name">Имя</label>
+            <label htmlFor="username">Имя</label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               required
             />
@@ -80,12 +113,12 @@ const Register = () => {
             />
             {error && (
               <span className="error-message">
-                Неверно введены данные
+                {errorMessage || 'Неверно введены данные'}
               </span>
             )}
           </div>
 
-          <button type="submit" className="btn" onClick={() => window.location.href='/loading'}>
+          <button type="submit" className="btn">
             Продолжить
           </button>
         </form>
