@@ -191,6 +191,18 @@ a {
   color: white;
 }
 
+.user-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.logout-icon  {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  z-index: 1;
+}
+
 /* FOOTER */
 footer {
     margin-top: 210px;
