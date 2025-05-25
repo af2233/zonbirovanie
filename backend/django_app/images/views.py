@@ -6,11 +6,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http import FileResponse
+
 from .models import FileArchive
 from .serializers import FileArchiveSerializer
 
+
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([AllowAny]) # IsAuthenticated
 def upload_archive(request):
     uploaded_file = request.FILES.get('uploaded_file')
     if not uploaded_file:
@@ -35,8 +37,9 @@ def upload_archive(request):
         return Response(response_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
-@permission_classes([AllowAny]) # Или IsAuthenticated, если только залогиненные пользователи могут запускать обработку
+@permission_classes([AllowAny])
 def process_images(request, archive_id):
     try:
         archive = FileArchive.objects.get(id=archive_id)
@@ -64,7 +67,7 @@ def process_images(request, archive_id):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny]) # Или IsAuthenticated, если только залогиненные пользователи могут запускать обработку
+@permission_classes([AllowAny])
 def receive_processed_archive(request, archive_id):
     try:
         archive = FileArchive.objects.get(id=archive_id)
@@ -78,6 +81,7 @@ def receive_processed_archive(request, archive_id):
     archive.save()
     serializer = FileArchiveSerializer(archive)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -108,4 +112,4 @@ def download_processed_archive(request, archive_id):
     except FileNotFoundError:
         return Response({'error': 'Обработанный файл не найден на сервере.'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return Response({'error': f'Ошибка при отправке файла: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        return Response({'error': f'Ошибка при отправке файла: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

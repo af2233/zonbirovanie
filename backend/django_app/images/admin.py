@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from images.models import UploadedImage, ProcessedImage
+from .models import UploadedImage, ProcessedImage, FileArchive
 
 
 admin.site.register(UploadedImage)
 admin.site.register(ProcessedImage)
+admin.site.register(FileArchive)
