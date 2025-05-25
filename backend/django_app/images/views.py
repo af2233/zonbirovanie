@@ -12,8 +12,8 @@ from .serializers import FileArchiveSerializer
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny]) # IsAuthenticated
-def upload_archive(request):
+@permission_classes([AllowAny])
+def upload(request):
     uploaded_file = request.FILES.get('uploaded_file')
     if not uploaded_file:
         return Response({'error': 'Вы не предоставили файл.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -40,25 +40,24 @@ def upload_archive(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def process_images(request, archive_id):
+def process(request, id):
     try:
-        archive = FileArchive.objects.get(id=archive_id)
+        archive = FileArchive.objects.get(id=id)
     except FileArchive.DoesNotExist:
         return Response({'error': 'Архив не найден.'}, status=status.HTTP_404_NOT_FOUND)
 
     if not archive.uploaded_file:
         return Response({'error': 'В архив не загружен ни один файл.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    ml_service_url = os.getenv('ML_URL', 'http://ml-service/process/')
-    
+    ml_service_url = os.getenv('ML_URL')
 
     try:
         with open(archive.uploaded_file.path, 'rb') as f:
             files = {'file': (archive.uploaded_file.name, f)}
-            # Передаем archive_id в данные, чтобы ML сервис знал, какой архив обновлять
-            response = requests.post(ml_service_url, files=files, data={'archive_id': archive_id})
+            # Передаем id в данные, чтобы ML сервис знал, какой архив обновлять
+            response = requests.post(ml_service_url, files=files, data={'id': id})
             response.raise_for_status()  # Вызываем исключение для плохих статус-кодов
-        # ML сервис вызовет endpoint 'receive_processed_archive' после завершения
+        # ML сервис вызовет endpoint 'receive' после завершения
         return Response({'message': 'Обработка началась. Вы получите уведомление по завершении.'}, status=status.HTTP_202_ACCEPTED)
     except requests.exceptions.RequestException as e:
         return Response({'error': f'Не удалось подключиться к ML сервису: {str(e)}'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
@@ -68,9 +67,9 @@ def process_images(request, archive_id):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def receive_processed_archive(request, archive_id):
+def receive(request, id):
     try:
-        archive = FileArchive.objects.get(id=archive_id)
+        archive = FileArchive.objects.get(id=id)
     except FileArchive.DoesNotExist:
         return Response({'error': 'Архив не найден.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -85,9 +84,9 @@ def receive_processed_archive(request, archive_id):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def download_processed_archive(request, archive_id):
+def download(request, id):
     try:
-        archive = FileArchive.objects.get(id=archive_id)
+        archive = FileArchive.objects.get(id=id)
     except FileArchive.DoesNotExist:
         return Response({'error': 'Архив не найден.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -104,7 +103,6 @@ def download_processed_archive(request, archive_id):
             session_token = request.session.get('archive_token')
             if not session_token or str(archive.token) != session_token:
                 return Response({'error': 'Недействительный токен или не авторизован.'}, status=status.HTTP_401_UNAUTHORIZED)
-
 
     try:
         response = FileResponse(archive.processed_file.open('rb'), as_attachment=True, filename=archive.processed_file.name)
