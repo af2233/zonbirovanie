@@ -4,8 +4,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
 }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
 
 .register-container {
   display: flex;
@@ -121,21 +125,25 @@
   margin-bottom: 29px;
 }
 
-.btn {
+.btn-register {
   width: 100%;
+  font-family: "Montserrat", sans-serif;
+  margin-right: 8px;
   height: 45px;
-  background: #283BA5;
+  background-color: #283BA5;
   border: none;
   border-radius: 40px;
   font-size: 20px;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  
 }
 
+
+
 .btn:hover {
-  background: #1a2a8f;
+  background-color: #1a2a8f;
 }
 
 .register-link {
