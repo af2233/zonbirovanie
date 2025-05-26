@@ -1,2 +1,7 @@
 torch>=1.0.0
 torchvision>=0.4.0
+tqdm==4.67.1
+fastapi
+Pillow
+unicorn
+httpx

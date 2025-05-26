@@ -10,7 +10,7 @@ class UNet(nn.Module):
         super().__init__()
         self.pool = nn.MaxPool2d(2, 2)
 
-        self.encode1 = nn.Sequential( # (3, 256, 256) + pool -> (16, 128, 128) 
+        self.encode1 = nn.Sequential(  # (3, 256, 256) + pool -> (16, 128, 128)
             nn.Conv2d(3, 16, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -18,7 +18,7 @@ class UNet(nn.Module):
             nn.ReLU(),
         )
 
-        self.encode2 = nn.Sequential( # (16, 128, 128)  -> (32, 64, 64) 
+        self.encode2 = nn.Sequential(  # (16, 128, 128)  -> (32, 64, 64)
             nn.Conv2d(16, 32, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -26,7 +26,7 @@ class UNet(nn.Module):
             nn.ReLU(),
         )
 
-        self.encode3 = nn.Sequential( # (32, 64, 64) -> (64, 32, 32)
+        self.encode3 = nn.Sequential(  # (32, 64, 64) -> (64, 32, 32)
             nn.Conv2d(32, 64, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -34,7 +34,7 @@ class UNet(nn.Module):
             nn.ReLU(),
         )
 
-        self.encode4 = nn.Sequential( # (64, 32, 32) -> (128, 16, 16)
+        self.encode4 = nn.Sequential(  # (64, 32, 32) -> (128, 16, 16)
             nn.Conv2d(64, 128, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -42,7 +42,7 @@ class UNet(nn.Module):
             nn.ReLU(),
         )
 
-        self.encode5 = nn.Sequential( # (128, 16, 16) -> (256, 8, 8)
+        self.encode5 = nn.Sequential(  # (128, 16, 16) -> (256, 8, 8)
             nn.Conv2d(128, 256, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -50,7 +50,7 @@ class UNet(nn.Module):
             nn.ReLU(),
         )
 
-        self.bottleneck = nn.Sequential( # (256, 8, 8) -> (256, 8, 8) -> (256, 8, 8)
+        self.bottleneck = nn.Sequential(  # (256, 8, 8) -> (256, 8, 8) -> (256, 8, 8)
             nn.Conv2d(256, 256, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -60,7 +60,7 @@ class UNet(nn.Module):
             nn.Conv2d(256, 256, 3, 1, 1),
             nn.ReLU()
         )
-        self.decode1 = nn.Sequential( # (512, 8, 8) -> (128, 16, 16)
+        self.decode1 = nn.Sequential(  # (512, 8, 8) -> (128, 16, 16)
             nn.Conv2d(512, 256, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -70,7 +70,7 @@ class UNet(nn.Module):
             nn.Conv2d(256, 128, 3, 1, 1),
             nn.ReLU()
         )
-        self.decode2 = nn.Sequential( # (128, 16, 16) -> (64, 32, 32)
+        self.decode2 = nn.Sequential(  # (128, 16, 16) -> (64, 32, 32)
             nn.Conv2d(256, 128, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -80,7 +80,7 @@ class UNet(nn.Module):
             nn.Conv2d(128, 64, 3, 1, 1),
             nn.ReLU()
         )
-        self.decode3 = nn.Sequential( # (128, 32, 32) -> (32, 64, 64)
+        self.decode3 = nn.Sequential(  # (128, 32, 32) -> (32, 64, 64)
             nn.Conv2d(128, 64, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -90,7 +90,7 @@ class UNet(nn.Module):
             nn.Conv2d(64, 32, 3, 1, 1),
             nn.ReLU()
         )
-        self.decode4 = nn.Sequential( # (64, 64, 64) -> (16, 128, 128)
+        self.decode4 = nn.Sequential(  # (64, 64, 64) -> (16, 128, 128)
             nn.Conv2d(64, 32, 3, 1, 1),
             nn.ReLU(),
             nn.Dropout(dropout),
@@ -106,7 +106,6 @@ class UNet(nn.Module):
 
         )
 
-
     def forward(self, x):
         # encoding
         e1 = self.encode1(x)
@@ -115,28 +114,27 @@ class UNet(nn.Module):
         e4 = self.encode4(self.pool(e3))
         e5 = self.encode5(self.pool(e4))
 
-        #bottleneck
+        # bottleneck
         bottle = self.bottleneck(e5)
 
-
-        #decoding
+        # decoding
         d1 = self.decode1(torch.cat((bottle, e5), 1))
         d2 = self.decode2(torch.cat((d1, e4), 1))
         d3 = self.decode3(torch.cat((d2, e3), 1))
         d4 = self.decode4(torch.cat((d3, e2), 1))
 
         return d4
-    
+
 
 def get_transforms(img_size: int) -> Tuple[transforms.Compose, transforms.Compose]:
-    X_trans = transforms.Compose([ 
+    X_trans = transforms.Compose([
         transforms.Resize(size=(img_size, img_size)),
         transforms.ToTensor()
-        ])
+    ])
 
     y_trans = transforms.Compose([
         transforms.Resize(size=(img_size, img_size)),
         transforms.ToTensor()
-        ])
-    
+    ])
+
     return X_trans, y_trans
