@@ -38,12 +38,13 @@
 | POSTGRES_NAME | untitled |
 | POSTGRES_USER | postgres |
 | POSTGRES_PASSWORD | 1234 |
-| POSTGRES_HOST | postgres_db |
+| POSTGRES_HOST | localhost |
 | POSTGRES_PORT | 5432 |
 | POSTGRES_DB | untitled |
 
-Чтобы развернуть проект локально, следуйте инструкциям в каждой из трёх директорий сервисов. Также нужно будет заменить postgres_db на localhost в переменной POSTGRES_HOST. Чтобы запустить проект в контейнерах, следуйте инструкции ниже.<br>
+Чтобы развернуть проект локально, следуйте инструкциям в каждой из трёх директорий сервисов. Чтобы запустить проект в контейнерах*, следуйте инструкции ниже.<br>
 
+Замените localhost на postgres_db в переменной POSTGRES_HOST<br><br>
 Запустите Docker Desktop.<br><br>
 Сборка проекта:
 ```
@@ -57,3 +58,4 @@ docker-compose up -d
 ```
 docker-compose down
 ```
+###### *запуск в контейнерах на данный момент недоступен

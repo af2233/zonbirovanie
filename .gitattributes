@@ -1,2 +1,0 @@
-ML/models/model_45_mln_52_iou.pth filter=lfs diff=lfs merge=lfs -text
-ML/models/*.pth filter=lfs diff=lfs merge=lfs -text
