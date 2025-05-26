@@ -1,23 +1,34 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import StreamingResponse, JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-from engine import run_engine
 import io
 import zipfile
+import logging
+import uvicorn
+from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse, JSONResponse
+
+from engine import run_engine
+
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
-# Разрешаем CORS (для фронта)
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://0.0.0.0:3000",
+    "http://frontend:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # замените на свой домен в проде
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-@app.post("/process/")
+@app.post("/predict")
 async def process(file: UploadFile = File(...)):
     try:
         zip_bytes = await file.read()
@@ -41,3 +52,7 @@ async def process(file: UploadFile = File(...)):
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app=app, host="0.0.0.0", port=4000)

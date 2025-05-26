@@ -1,14 +1,15 @@
-import torch
-from torchvision.utils import save_image
-from models import UNet, get_transforms
-
 import os
 import random
 import zipfile
+import torch
+from torchvision.utils import save_image
 from PIL import Image
 from tqdm import tqdm
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
+from models import UNet, get_transforms
+
 
 # Параметры
 SEED = 666
@@ -16,7 +17,7 @@ DROPOUT = 0.2
 IMG_SIZE = 320
 BATCH_SIZE = 16
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-CHECKPOINT = Path('models/model_45_mln_52_iou.pth')
+CHECKPOINT = Path('../models/model_45_mln_52_iou.pth')
 
 
 def set_seed(seed: int = SEED):
