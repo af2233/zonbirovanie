@@ -31,6 +31,14 @@ html, body {
     flex-direction: column;
 }
 
+.content-wrapper {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -53,6 +61,12 @@ header {
     margin-top: 33px;
 }
 
+.loading-header {
+  padding: 30px 150px;
+  position: relative;
+  z-index: 10;
+}
+
 a {
     color: #fff;
     text-decoration: none;
@@ -67,6 +81,13 @@ a {
     z-index: 1;
 }
 
+.header-content {
+  display:contents;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
 
 .logo {
@@ -77,6 +98,11 @@ a {
 /* MAIN */
 main {
     flex-grow: 1;
+}
+
+.white {
+    color: #FFFFFF;
+    opacity: 0.9;
 }
 
 
@@ -92,10 +118,138 @@ main {
     font-family: "Montserrat", sans-serif;
     font-size: 19px;
     font-weight: 700;
-    margin-right: 13.49px;
+    margin-right: 1px;
 }
 
 /* MAIN-LOADING */
+
+.upload-area {
+  width: 825px;
+  height: 255px;
+  background-color: #D4DBFF;
+  border: 3px dashed #283BA5;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 0 30px rgba(212, 219, 255, 0.6);
+  transition: all 0.3s;
+}
+
+.upload-area:hover {
+  transform: translateY(-5px);
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 255px;
+  width: 100%;
+  cursor: pointer;
+  gap: 10px;
+  color: #283BA5;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+}
+
+.upload-icon {
+  width: 50px;
+  height: 50px;
+}
+
+/* FILE */
+
+.file-input {
+  display: none;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: white;
+}
+
+.file-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.file-name {
+  font-size: 16px;
+  letter-spacing: 0.03em;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* BUTTONS */
+
+.action-button {
+  
+  border-radius: 10px;
+  padding: 11px 27px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-top: 51px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.white {
+  color: #FFFFFF;
+  opacity: 0.9;
+}
+
+.start-button {
+  display: flex;
+  justify-content: center;  
+  margin-top: 51px; 
+}
+
+.start {
+  display: inline-block;
+  padding: 11px 27px;
+  background-color: #3248C0; /* Изначальный цвет как вы указали */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(50, 72, 192, 0.7); 
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+
+.start:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 0 20px rgba(50, 72, 192, 0.9); 
+}
+
+
+.start:active {
+  transform: scale(0.98); 
+  box-shadow: 0 0 10px rgba(50, 72, 192, 0.5); 
+}
+
+.start:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important; 
+}
+
+
 .main-caption h1{
     text-align: center;
     font-size: 36px;
@@ -118,7 +272,6 @@ main {
     margin-bottom: 50px;
     opacity: 0.6;
 }
-
 
 .select-image {
     width: 825px; 
@@ -163,55 +316,22 @@ main {
     display: none; 
 }
 
-.white {
-  color: #FFFFFF;
-  opacity: 0.9;
-}
-
-.white {
-  color: #FFFFFF;
-  opacity: 0.9;
-}
-
 .start-button {
-  display: flex;
-  justify-content: center;  
-  margin-top: 51px; 
+    display: flex;
+    justify-content: center;  
+    margin-top: 51px; 
 }
 
 .start {
-  display: inline-block;
-  padding: 11px 27px;
-  background-color: #3248C0; /* Изначальный цвет как вы указали */
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  letter-spacing: 0.06em;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
-  box-shadow: 0 0 15px rgba(50, 72, 192, 0.7); /* Подсветка синим */
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Только для трансформации и тени */
-}
-
-/* Эффект при наведении - увеличение */
-.start:hover {
-  transform: scale(1.02); /* Увеличение на 5% */
-  box-shadow: 0 0 20px rgba(50, 72, 192, 0.9); /* Усиленная подсветка */
-}
-
-/* Эффект при нажатии - уменьшение */
-.start:active {
-  transform: scale(0.98); /* Уменьшение на 2% */
-  box-shadow: 0 0 10px rgba(50, 72, 192, 0.5); /* Ослабленная подсветка */
-}
-
-/* Состояние disabled - без изменений цвета */
-.start:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none !important; /* Отключаем трансформации */
+    display: inline-block;
+    padding: 11px 27px;
+    background-color: #283BA5;
+    border-radius: 10px;
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(40, 59, 165, 1);
 }
 
 .text-completed {

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
 import './Login.css';
-import waveImage from '../../assets/wave-log-in.svg';
-import logoImage from '../../assets/logo-log-in.svg';
-
+import waveImage from '../../images/wave-log-in.svg';
+import logoImage from '../../images/logo-log-in.svg';
 
 const Login = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
@@ -85,7 +83,7 @@ const Login = () => {
             )}
           </div>
 
-          <button type="submit" className="btn">
+          <button type="submit" className="btn-login">
             Продолжить
           </button>
         </form>

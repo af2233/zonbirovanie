@@ -159,6 +159,34 @@ nav {
    
     z-index: -1; 
 }
+
+/* USER */
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 0.04em;
+  color: white;
+}
+
+.user-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.logout-icon  {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  z-index: 1;
+}
+
   
 
 /* FOOTER */

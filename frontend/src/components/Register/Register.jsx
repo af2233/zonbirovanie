@@ -1,22 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
 import './Register.css';
-import waveImage from '../../assets/wave-log-in.svg';
-import logoImage from '../../assets/logo-log-in.svg';
-
+import waveImage from '../../images/wave-log-in.svg';
+import logoImage from '../../images/logo-log-in.svg';
 
 const Register = () => {
+
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: ''
   });
-
   const [error, setError] = useState(false);
 
   const handleChange = (e) => {
@@ -117,9 +115,9 @@ const Register = () => {
             )}
           </div>
 
-          <button type="submit" className="btn">
+        <button type="submit" className="btn-register">
             Продолжить
-          </button>
+        </button>
         </form>
       </div>
 

@@ -1,54 +1,102 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import './Loading.css';
-import logo from "../../assets/logo.svg";
-import loadingCloud from "../../assets/loading-cloud.svg";
-import folderIcon from "../../assets/folder.png";
+
+import rectangleImage from '../../images/rectangle.png';
+import userIcon from '../../images/user-icon.svg';
+import loadingCloud from '../../images/loading-cloud.svg';
+import folderIcon from '../../images/folder.png';
+import logo from '../../images/logo.svg';
+import eclipse from '../../images/ellipse.png';
+
 import { fetchUser } from '../Utils.jsx';
 import UserInfo from '../Utils.jsx';
-
 
 const Loading = () => {
   const [username, setUsername] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessed, setIsProcessed] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState('');
+  const downloadRef = useRef(null);
 
   useEffect(() => {
     fetchUser(setUsername);
   }, []);
 
-  return (
-    <div className="loading-container">
+  const handleStartAnalysis = async () => {
+    if (!selectedFile) return;
 
+    setIsProcessing(true);
+    setIsProcessed(false);
+    setDownloadUrl('');
+
+    try {
+      // Upload file
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const uploadResponse = await fetch('/images/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Ошибка загрузки файла');
+      }
+
+      // Process image
+      const processResponse = await fetch('/images/process', {
+        method: 'POST',
+      });
+
+      if (!processResponse.ok) {
+        throw new Error('Ошибка обработки изображения');
+      }
+
+      const { downloadUrl } = await processResponse.json();
+
+      setIsProcessing(false);
+      setIsProcessed(true);
+      setDownloadUrl(downloadUrl);
+
+      // Автопрокрутка к кнопке "Скачать"
+      setTimeout(() => {
+        downloadRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+
+    } catch (error) {
+      console.error(error);
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="home-container">
       {/* HEADER */}
-      <header className="loading-header">
+      <header className="header">
+        <img src={rectangleImage} alt="" className="head-rectangle" />
         <div className="header-content">
           <Link to="/">
-            <img
-              src={logo}
-              alt="Zonbirovanie"
-              className="logo"
-            />
+            <img src={logo} alt="Zonbirovanie" className="logo" />
           </Link>
-          <UserInfo username={username}/>
+          <UserInfo username={username} />
         </div>
       </header>
 
       {/* MAIN */}
       <main className="loading-main">
-
         <div className="content-wrapper">
-          <h1>Загрузите снимок для анализа нефтяных загрязнений</h1>
-          <p className="subtitle">Наша система обработает изображение и выявит возможные нефтяные разливы</p>
+          <div className="main-caption">
+            <h1><span className="white">Загрузите снимок для анализа нефтяных<br />загрязнений</span></h1>
+            <p>Наша система обработает изображение и выявит возможные нефтяные разливы</p>
+          </div>
 
           {!selectedFile ? (
             <div className="upload-area">
               <label htmlFor="file-upload" className="upload-label">
-                <img
-                  src={loadingCloud}
-                  alt="Upload icon"
-                  className="upload-icon"
-                />
+                <img src={loadingCloud} alt="Upload icon" className="upload-icon" />
                 <span>Выберите файл</span>
               </label>
               <input
@@ -64,15 +112,38 @@ const Loading = () => {
               <span className="file-name">{selectedFile.name}</span>
             </div>
           )}
-          <button className="action-button">Начать анализ</button>
+
+          <div className="action-button">
+            <button className="white start" onClick={handleStartAnalysis} disabled={isProcessing}>
+              {isProcessing ? 'Обработка...' : 'Начать анализ'}
+            </button>
+          </div>
         </div>
+
+        {isProcessed && downloadUrl && (
+          <div className="processing-completed" ref={downloadRef}>
+            <div className="text-completed">
+              <p><span className="white">Обработка завершена. Ваше <br />изображение готово к скачиванию!</span></p>
+              <img src={eclipse} alt="" className="circle" />
+            </div>
+
+            <div className="download-button">
+              <span className="white">
+                <a href={downloadUrl} className="download" download>
+                  Скачать
+                </a>
+              </span>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* FOOTER */}
-      <footer className="copyright">
-        <p>© 2025 zonbirovanie</p>
+      <footer className="loading-footer">
+        <div className="copyright">
+          <span className="white">@ 2025 zonbirovanie</span>
+        </div>
       </footer>
-
     </div>
   );
 };
