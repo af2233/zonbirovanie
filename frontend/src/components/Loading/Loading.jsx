@@ -33,35 +33,28 @@ const Loading = () => {
     setDownloadUrl('');
 
     try {
-      // Upload file
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const uploadResponse = await fetch('/images/upload', {
+      const response = await fetch('http://localhost:4000/process/', {
         method: 'POST',
         body: formData,
       });
 
-      if (!uploadResponse.ok) {
-        throw new Error('Ошибка загрузки файла');
+      if (!response.ok) {
+        throw new Error('Ошибка при получении файла');
       }
 
-      // Process image
-      const processResponse = await fetch('/images/process', {
-        method: 'POST',
-      });
+      // Получить бинарные данные
+      const blob = await response.blob();
 
-      if (!processResponse.ok) {
-        throw new Error('Ошибка обработки изображения');
-      }
-
-      const { downloadUrl } = await processResponse.json();
+      // Создать ссылку на скачивание
+      const url = window.URL.createObjectURL(blob);
+      setDownloadUrl(url);
 
       setIsProcessing(false);
       setIsProcessed(true);
-      setDownloadUrl(downloadUrl);
 
-      // Автопрокрутка к кнопке "Скачать"
       setTimeout(() => {
         downloadRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 300);
@@ -71,7 +64,6 @@ const Loading = () => {
       setIsProcessing(false);
     }
   };
-
   return (
     <div className="home-container">
       {/* HEADER */}
@@ -79,7 +71,7 @@ const Loading = () => {
         <img src={rectangleImage} alt="" className="head-rectangle" />
         <div className="header-content">
           <Link to="/">
-            <img src={logo} alt="Zonbirovanie" className="logo" />
+            <img src={logo} alt="Zonbirovanie" className="logo"/>
           </Link>
           <UserInfo username={username} />
         </div>
@@ -123,13 +115,13 @@ const Loading = () => {
         {isProcessed && downloadUrl && (
           <div className="processing-completed" ref={downloadRef}>
             <div className="text-completed">
-              <p><span className="white">Обработка завершена. Ваше <br />изображение готово к скачиванию!</span></p>
+              <p><span className="white">Обработка завершена. Ваш архив<br />готов к скачиванию!</span></p>
               <img src={eclipse} alt="" className="circle" />
             </div>
 
             <div className="download-button">
               <span className="white">
-                <a href={downloadUrl} className="download" download>
+                <a href={downloadUrl} download="results.zip" className="download">
                   Скачать
                 </a>
               </span>
