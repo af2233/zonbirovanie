@@ -49,7 +49,7 @@ def process(request, id):
     if not archive.uploaded_file:
         return Response({'error': 'В архив не загружен ни один файл.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    ml_service_url = os.getenv('ML_URL')
+    ml_service_url = "http://localhost:4000/process/"
 
     try:
         with open(archive.uploaded_file.path, 'rb') as f:
