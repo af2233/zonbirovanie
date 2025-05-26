@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+
 import './Login.css';
 import waveImage from '../../images/wave-log-in.svg';
 import logoImage from '../../images/logo-log-in.svg';
 
+
 const Login = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);

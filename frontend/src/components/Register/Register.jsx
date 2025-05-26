@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+
 import './Register.css';
 import waveImage from '../../images/wave-log-in.svg';
 import logoImage from '../../images/logo-log-in.svg';
+
 
 const Register = () => {
 
