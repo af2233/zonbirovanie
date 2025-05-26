@@ -23,3 +23,39 @@
 ### Документация системы:
 
 > [Google Docs](https://docs.google.com/document/d/1kaDwcIGbTPgFN-i_oswDtNHIyiXyrbueS-RU578EWPE/edit?tab=t.0)
+
+
+## Запуск проекта:
+Для начала создайте файл переменных окружения .env:
+
+### В директории backend
+| Переменная | Пример значения |
+| ------------- | ------------- |
+| SECRET_KEY | secret |
+| DEBUG | 1 |
+| ALLOWED_HOSTS | * |
+| POSTGRES_ENGINE | django.db.backends.postgresql |
+| POSTGRES_NAME | untitled |
+| POSTGRES_USER | postgres |
+| POSTGRES_PASSWORD | 1234 |
+| POSTGRES_HOST | localhost |
+| POSTGRES_PORT | 5432 |
+| POSTGRES_DB | untitled |
+
+Чтобы развернуть проект локально, следуйте инструкциям в каждой из трёх директорий сервисов. Чтобы запустить проект в контейнерах*, следуйте инструкции ниже.<br>
+
+Замените localhost на postgres_db в переменной POSTGRES_HOST<br><br>
+Запустите Docker Desktop.<br><br>
+Сборка проекта:
+```
+docker-compose build
+```
+Запуск проекта:
+```
+docker-compose up -d
+```
+Остановка проекта:
+```
+docker-compose down
+```
+###### *запуск в контейнерах на данный момент недоступен

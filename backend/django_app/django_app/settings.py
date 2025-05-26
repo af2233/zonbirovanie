@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 import socket
 from pathlib import Path
+from datetime import timedelta
+
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -42,12 +45,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'djoser',
     'corsheaders',
     'drf_spectacular',
     'debug_toolbar',
-    'images',
-    'users',
+    'django_cleanup.apps.CleanupConfig',
+
+    'users.apps.UsersConfig',
+    'images.apps.ImagesConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +103,7 @@ DATABASES = {
     },
     'postgres': {
         'ENGINE': os.getenv('POSTGRES_ENGINE'),
-        'NAME': os.getenv('POSTGRES_DB'),
+        'NAME': os.getenv('POSTGRES_NAME'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
@@ -136,25 +145,100 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT= os.path.join(BASE_DIR,'static')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS settings
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://0.0.0.0:3000",
+    "http://frontend:3000",
+]
+
+
+# DRF settings
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly', 
+    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '10000/day',
+        'anon': '1000/day',
+    }
 }
+
+
+# JWt settings
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+
+# Djoser settings
+
+DJOSER = {
+    'LOGIN_FIELD': 'username',
+    'USER_CREATE_PASSWORD_RETYPE': False,
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.CustomUserCreateSerializer',
+    },
+    'TOKEN_MODEL': None,
+    'PASSWORD_RESET_CONFIRM_URL': 'reset_password_confirm/{uid}/{token}',
+    'SEND_CONFIRMATION_EMAIL': False,
+    'SEND_ACTIVATION_EMAIL': False,
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+}
+
+
+# Swagger settings
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'zonbirovanie',
     'DESCRIPTION': 'IT project',
-    'VERSION': '0.4.2',
+    'VERSION': '0.5.1',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,
+    },
 }
+
+
+# Media file paths
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@example.com'
+
+
+# AUTH_USER_MODEL = 'users.MyUser'
 
 
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -162,10 +246,3 @@ hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = [
     '127.0.0.1',
 ] + [ip[:-1] + "1" for ip in ips]  # Преобразование IP Docker-сети
-
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
-AUTH_USER_MODEL = 'users.MyUser'

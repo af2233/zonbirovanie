@@ -1,31 +1,23 @@
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from django.urls import reverse_lazy
+from rest_framework import permissions, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.models import User
-
-
-class UserMixin(CreateView):
-    model = User
-    form_class = UserForm
-    template_name = 'User/User.html'
-    success_url = reverse_lazy('User:list')
+from .serializers import LogoutSerializer
 
 
-class UserCreateView(UserMixin, CreateView):
-    pass
+class LogoutView(APIView):
+    """
+    Функция выхода из учётной записи.
+    """
+    serializer_class = LogoutSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
-
-class UserListView(ListView):
-    model = User
-    ordering = 'id'
-    paginate_by = 10
-
-
-class UserUpdateView(UserMixin, UpdateView):
-    pass
-
-
-class UserDeleteView(DeleteView):
-    model = User
-    template_name = 'User/User.html'
-    success_url = reverse_lazy('User:list')
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
