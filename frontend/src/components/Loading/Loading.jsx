@@ -2,16 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import './Loading.css';
-
 import rectangleImage from '../../images/rectangle.png';
-import userIcon from '../../images/user-icon.svg';
 import loadingCloud from '../../images/loading-cloud.svg';
 import folderIcon from '../../images/folder.png';
 import logo from '../../images/logo.svg';
 import eclipse from '../../images/ellipse.png';
-
 import { fetchUser } from '../Utils.jsx';
 import UserInfo from '../Utils.jsx';
+
 
 const Loading = () => {
   const [username, setUsername] = useState('');
@@ -36,7 +34,7 @@ const Loading = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('http://localhost:4000/process/', {
+      const response = await fetch('http://localhost:4000/predict', {
         method: 'POST',
         body: formData,
       });
@@ -81,8 +79,8 @@ const Loading = () => {
       <main className="loading-main">
         <div className="content-wrapper">
           <div className="main-caption">
-            <h1><span className="white">Загрузите снимок для анализа нефтяных<br />загрязнений</span></h1>
-            <p>Наша система обработает изображение и выявит возможные нефтяные разливы</p>
+            <h1><span className="white">Загрузите снимки для анализа нефтяных<br/>загрязнений</span></h1>
+            <p>Наша система обработает изображения и выявит возможные нефтяные разливы. <br/>(на данный момент поддерживается только .zip формат)</p>
           </div>
 
           {!selectedFile ? (
@@ -115,7 +113,7 @@ const Loading = () => {
         {isProcessed && downloadUrl && (
           <div className="processing-completed" ref={downloadRef}>
             <div className="text-completed">
-              <p><span className="white">Обработка завершена. Ваш архив<br />готов к скачиванию!</span></p>
+              <p><span className="white">Обработка завершена. Ваши результаты<br/>готовы к скачиванию!</span></p>
               <img src={eclipse} alt="" className="circle" />
             </div>
 

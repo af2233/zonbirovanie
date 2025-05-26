@@ -46,7 +46,7 @@ const Home = () => {
                 безопасности водных ресурсов.
               </p>
               <div className="main-content-button">
-                <Link to="/login"><span className="white">Начать работу прямо сейчас!</span></Link>
+                <Link to="/loading"><span className="white">Начать работу прямо сейчас!</span></Link>
               </div>
             </div>
           </div>
