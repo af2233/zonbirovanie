@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
-import userIcon from '../assets/user-icon.svg';
-import logoutIcon from '../assets/logout.png';
+import userIcon from '../images/user-icon.svg';
+import logoutIcon from '../images/logout.png';
 
 
 
