@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import './Register.css';
 import waveImage from '../../assets/wave-log-in.svg';
 import logoImage from '../../assets/logo-log-in.svg';
-import { fetchWithRefresh } from '../Utils.jsx';
 
 
 const Register = () => {
@@ -41,7 +40,7 @@ const Register = () => {
     }
 
     try {
-      const res = await fetchWithRefresh('http://localhost:8000/api/v1/auth/users/', {
+      const res = await fetch('http://localhost:8000/api/v1/auth/users/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })

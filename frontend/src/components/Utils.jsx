@@ -6,7 +6,6 @@ import logoutIcon from '../assets/logout.png';
 
 
 
-
 export async function fetchWithRefresh(url, options) {
   let access = localStorage.getItem('access');
 
@@ -39,7 +38,7 @@ export async function fetchWithRefresh(url, options) {
         }
       });
     } else {
-      // refresh токен просрочен — выходим
+      // refresh токен просрочен - выходим
       localStorage.removeItem('access');
       localStorage.removeItem('refresh');
       window.location.href = '/login'; // page reload
@@ -49,9 +48,6 @@ export async function fetchWithRefresh(url, options) {
 
   return res;
 }
-
-
-
 
 
 
@@ -79,7 +75,6 @@ export async function handleLogout() {
     console.error('Ошибка сети при выходе', err);
   }
 }
-
 
 
 
@@ -132,6 +127,8 @@ function UserInfo({ username }) {
     </div>
   );
 }
+
+
 
 
 export default UserInfo;

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import waveImage from '../../assets/wave-log-in.svg';
 import logoImage from '../../assets/logo-log-in.svg';
-import { fetchWithRefresh } from '../Utils.jsx';
 
 
 const Login = () => {
@@ -24,7 +23,7 @@ const Login = () => {
     }
 
     try {
-      const res = await fetchWithRefresh('http://localhost:8000/api/v1/auth/jwt/create/', {
+      const res = await fetch('http://localhost:8000/api/v1/auth/jwt/create/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
