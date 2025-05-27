@@ -39,7 +39,6 @@ class BasicBlock(nn.Module):
         out = self.relu(out)
         return out
 
-
 class CustomResNetFCN(nn.Module):
     def __init__(self, block, layers, out_channels=3):
         super().__init__()
@@ -87,6 +86,7 @@ class CustomResNetFCN(nn.Module):
         x = self.decoder(x)
         x = F.interpolate(x, size=input_size, mode='bilinear', align_corners=False)
         return x
+
 
 
 class UNet(nn.Module):
@@ -263,3 +263,10 @@ def get_transforms(img_size: int) -> Tuple[transforms.Compose, transforms.Compos
     ])
 
     return X_trans, y_trans
+
+# MODELS_PATH = Path('models')
+# CHECKOPOINT = MODELS_PATH / 'model_45_mln_52_iou.pth'
+
+
+# unet_model = UNet(dropout=0.2).to('cuda')
+# unet_model.load_state_dict(torch.load(f='models/model_45_mln_52_iou.pth', map_location='cuda', weights_only=True))

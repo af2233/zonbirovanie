@@ -1,15 +1,10 @@
-import io
-import zipfile
-import logging
-import uvicorn
+import io, zipfile
 from fastapi import FastAPI, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from engine import run_engine
 
-
-logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
@@ -26,6 +21,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+
 )
 
 @app.post("/predict")
@@ -34,25 +30,20 @@ async def process(file: UploadFile = File(...)):
         zip_bytes = await file.read()
         results = run_engine(zip_bytes)
 
-        if not results:
-            return JSONResponse(content={"error": "No output generated"}, status_code=500)
-
+        # Пакуем данные в zip
         archive_buffer = io.BytesIO()
-        with zipfile.ZipFile(archive_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+        with zipfile.ZipFile(archive_buffer, 'w') as zf:
             for fname, img_bytes in results.items():
                 zf.writestr(fname, img_bytes)
 
         archive_buffer.seek(0)
 
+        # Отправляем по адресу
         return StreamingResponse(
             archive_buffer,
-            media_type="application/x-zip-compressed",
-            headers={"Content-Disposition": "attachment; filename=results.zip"}
+            media_type="application/zip",
+            headers={"Content-Disposition": "attachment; filename=result.zip"}
         )
 
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-
-
-if __name__ == "__main__":
-    uvicorn.run(app=app, host="0.0.0.0", port=4000)
