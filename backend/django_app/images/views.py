@@ -11,7 +11,7 @@ from .models import FileArchive
 from .serializers import FileArchiveSerializer
 
 
-ML_PREDICT_URL = os.getenv('ML_PREDICT_URL', 'http://localhost:4000/predict')
+ML_PREDICT_URL = os.getenv('ML_PREDICT_URL')
 
 
 @api_view(['POST'])
