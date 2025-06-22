@@ -11,6 +11,9 @@ from .models import FileArchive
 from .serializers import FileArchiveSerializer
 
 
+ML_PREDICT_URL = os.getenv('ML_PREDICT_URL', 'http://localhost:4000/predict')
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def upload(request):
@@ -49,13 +52,11 @@ def process(request, id):
     if not archive.uploaded_file:
         return Response({'error': 'В архив не загружен ни один файл.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    ml_service_url = "http://localhost:4000/process/"
-
     try:
         with open(archive.uploaded_file.path, 'rb') as f:
             files = {'file': (archive.uploaded_file.name, f)}
             # Передаем id в данные, чтобы ML сервис знал, какой архив обновлять
-            response = requests.post(ml_service_url, files=files, data={'id': id})
+            response = requests.post(ML_PREDICT_URL, files=files, data={'id': id})
             response.raise_for_status()  # Вызываем исключение для плохих статус-кодов
         # ML сервис вызовет endpoint 'receive' после завершения
         return Response({'message': 'Обработка началась. Вы получите уведомление по завершении.'}, status=status.HTTP_202_ACCEPTED)
