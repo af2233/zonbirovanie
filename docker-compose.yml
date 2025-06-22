@@ -1,19 +1,14 @@
 services:
-  django_app:
-    container_name: django_app
+  backend:
     build: ./backend
     env_file: ./backend/.env
     ports:
       - "8000:8000"
     depends_on:
-      - postgres_db
-    volumes:
-      - ./backend:/app
+      - db
 
-  postgres_db:
-    container_name: postgres_db
+  db:
     image: postgres:15
-    restart: always
     env_file: ./backend/.env
     volumes:
       - pgdata:/var/lib/postgresql/data

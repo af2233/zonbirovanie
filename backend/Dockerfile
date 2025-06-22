@@ -31,8 +31,5 @@ WORKDIR /app/django_app
 
 RUN chmod +x ./script.sh
 
-# Открытие порта
-EXPOSE 8000
-
 # Запуск миграций и сервера
 CMD ["./script.sh"]
