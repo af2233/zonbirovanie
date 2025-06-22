@@ -26,18 +26,4 @@
 
 
 ## Запуск проекта:
-Создайте файл переменных окружения .env в директории backend:
-| Переменная | Пример значения |
-| ------------- | ------------- |
-| SECRET_KEY | secret |
-| DEBUG | 1 |
-| ALLOWED_HOSTS | * |
-| POSTGRES_ENGINE | django.db.backends.postgresql |
-| POSTGRES_NAME | untitled |
-| POSTGRES_USER | postgres |
-| POSTGRES_PASSWORD | 1234 |
-| POSTGRES_HOST | localhost |
-| POSTGRES_PORT | 5432 |
-| POSTGRES_DB | untitled |
-
-Чтобы развернуть проект локально, следуйте инструкциям в каждой из трёх директорий сервисов. Для запуска понадобятся: python, npm, postgres.
+Чтобы развернуть проект локально, следуйте инструкциям в каждой из трёх директорий сервисов. Для запуска понадобятся: python, npm, postgres, git-lfs. Файл .env создавать необязательно. Запущенный проект доступен по адресу http://localhost:3000.

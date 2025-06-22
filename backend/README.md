@@ -7,9 +7,13 @@ cd backend
 ```
 python -m venv .venv
 ```
-Активируйте виртуальную среду (Windows):
+Активируйте виртуальную среду:
 ```
-source .venv/Scripts/activate
+.venv\Scripts\activate
+```
+Обновите pip:
+```
+python -m pip install --upgrade pip
 ```
 Выполните установку зависимостей:
 ```

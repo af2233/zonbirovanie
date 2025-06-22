@@ -7,9 +7,13 @@ cd ML
 ```
 python -m venv .venv
 ```
-Активируйте виртуальную среду (Windows):
+Активируйте виртуальную среду:
 ```
-source .venv/Scripts/activate
+.venv\Scripts\activate
+```
+Обновите pip:
+```
+python -m pip install --upgrade pip
 ```
 Выполните установку зависимостей:
 ```
@@ -21,5 +25,5 @@ cd app
 ```
 Запустите сервер:
 ```
-uvicorn main:app --host 0.0.0.0 --port 4000 --reload
+uvicorn main:app --host 0.0.0.0 --port 4000
 ```
